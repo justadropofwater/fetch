@@ -16,19 +16,19 @@ node/npm
 
 App
 ====
-*express
+* express
 
-*mongoose
+* mongoose
 
-*mongoose-auth
+* mongoose-auth
 
-*express-mongodb
+* express-mongodb
 
-*ws
+* ws
 
-*async
+* async
 
-*optimist
+* optimist
 
 Install dependecies
 ====
