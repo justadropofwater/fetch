@@ -53,6 +53,10 @@ var	express = require('express'),
 // also keeping var camelCase convention from parent dependency
 //	mongooseStore = require('express-mongodb'),
 
+// let's use a wrapper for date/time/etc so we can have cleaner methods
+// and jarble namespace everytime, seems moment.js is the best-of
+//	moment = require('moment'),
+
 // after some research I think the best crypto wrapper is the
 // node-cryptojs-aes module, it removes the openssl dependecy
 // and even tho doesn't support ECC (only symmetric) seems to

@@ -11,6 +11,7 @@
     "async": "*",
     "startStopDaemon": "*",
     "optimist": "*",
+    "moment": "*",
     "ws": "*",
     "mongoose": "*",
     "express-mongodb": "*",
