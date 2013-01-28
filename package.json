@@ -2,15 +2,18 @@
   "name": "fetch",
   "version": "0.0.1",
   "private": true,
-  "scripts": {
-    "start": "node startFetch"
+  "repository": {
+	  "type": "git",
+	  "url": "https://github.com/justadropofwater/fetch.git"
   },
   "dependencies": {
-    "express": "3.0.6",
-    "jade": "*",
+    "express": "*",
+    "async": "*",
+    "startStopDaemon": "*",
+    "optimist": "*",
+    "ws": "*",
     "mongoose": "*",
-    "mongoose-auth": "*",
     "express-mongodb": "*",
-    "ws": "*"
+    "node-crypto-aes": "*"
     }
 }

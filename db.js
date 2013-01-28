@@ -1,21 +1,12 @@
+/**
+ * db.js
+ */
 
-mongoose.connect(db);
 
-app.use(express.cookieParser());
-app.use(express.session({
-    cookie: {
-        maxAge: 60000 // 1 min as example
-    },
-    secret: "Wild Express-MongoDB",
-    store: new MongooseStore(options)
-}));
+databaseUrl = "mongodb://localhost:27017/testdb";
+collections = ["testCollection1", "authRequests", "users","messages"];
+// this will switch over to express-mongodb
+db = require("mongojs").connect(databaseUrl, collections);
 
-app.get('/', function(req, res){
-    var collection = mongoose.model(options.collection);
-    collection.find({}, function (err, sessions) {
-        if (err) console.log(err);
-        res.send(sessions);
-    });
-});
-
-app.listen(3000);
+global_counter = 0;
+all_active_connections = {};

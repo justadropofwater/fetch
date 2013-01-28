@@ -1,0 +1,7 @@
+{
+	type : "newUser",
+	userName : jObj.userName,
+	password : jObj.password,
+	deviceID : jObj.deviceID,
+	authRequestDate : currentDate
+}
