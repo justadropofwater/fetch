@@ -11,10 +11,13 @@
 // core modules
 // to make testing and output readability lets
 // add default http server
-//var	http = require('http'),
+var
+//var http = require('http'),
 // adding a secure html server - this is assuming we are
 // already set with a cert and ca 
 //	https = require('https'),
+// add sys so we can receive more output
+	sys = require('sys');
 // add 'path' module so we can have some routing
 //	path = require('path'),
 // and to further enhance our testing abilities in a browser
@@ -85,8 +88,11 @@ var db = require("mongojs").connect(databaseUrl, collections);
 // or a store or both but essentially every global var is a var
 // an external process can use whenever they are in memory
 global_counter = 0;
+// is it because how unity parses that we don't use '[]' here?
 all_active_connections = {};
+
 // i'm getting console.log heavy for now until we have some logging happening 
+
 console.log('global_counter: ' + global_counter + ' all_active_connections: ' + all_active_connections);
 
 //now let's have the default on method invoked
@@ -95,7 +101,7 @@ console.log('global_counter: ' + global_counter + ' all_active_connections: ' + 
 //declaring an iteration of global_counter as id
         var id = global_counter++;
 		console.log('id: ' + id);
-		
+		sys.debug("connection: " + ws);
 //adding the new id 
         all_active_connections[id] = ws;  
         ws.id = id;
@@ -137,7 +143,11 @@ console.log('global_counter: ' + global_counter + ' all_active_connections: ' + 
 	                			ws.send("db error, message not saved");
 	                		} else  {
 	                        	console.log("message saved to db");
-// is this an integrity check? 
+// is this an integrity check?
+// this should be an explicit function .i.e. "findUser"
+// including this in the scope of creating a new user
+// can make it proning to fishing for current/active accounts
+// during the create process 
 	                        	db.users.find(
 	                        		{
 	                        			userName:jObj.userName,
@@ -171,7 +181,8 @@ console.log('global_counter: ' + global_counter + ' all_active_connections: ' + 
 // see
 	                var currentDate = Math.floor(new Date().getTime()/1000);
 
-// save the auth request no matter what                
+// save the auth request no matter what         
+// this should eventually move to the logging 'app'       
 	                db.authRequests.save(  
 						{
 							type : "authRequest",

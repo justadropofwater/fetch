@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>fetch Server Test - Simple Client</title>
+	  	<meta charset="UTF-8" />
+	  	<script language="javascript" type="text/javascript" src="jquery.websocket.js"></script>
+	  	<script language="javascript" type="text/javascript" src="simple-client.js"></script>
+	</head>
+	<body>
+		<pre>
+			<span class="bold">URL: </span> <input id="url" /> <input id="open" type="button" value="Connect" /> <input id="close" type="button" value="Disconnect" />
+			<br />
+			<span class="bold">Status:</span> <span id="status"></span>
+		</pre>
+		
+		<pre>
+			<input id="newUser" type="button" value="newUser" /> <input id="authRequest" type="button" value="authRequest" /> <input id="getContacts" type="button" value="getContacts" /> <input id="newMessage" type="button" value="newMessage" /> <input id="saveContact" type="button" value="saveContact" /> <input id="findMessage" type="button" value="findMessage" />			
+		</pre>
+		
+		<pre>
+			<span class="bold">Send a raw message:</span>
+		  	<textarea id="text" rows="4" cols="25"></textarea>
+			<input id="send" type="button" value="Send" />
+		  	<br />
+		  	<span class="bold">Response</span>
+		  	<span id="message"></span>
+		</pre>  	
+	</body>
+</html>
