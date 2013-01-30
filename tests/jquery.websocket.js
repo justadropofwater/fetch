@@ -23,23 +23,38 @@
                 events: {}
             };
             $.extend(settings, $.websocketSettings, s);
-            $(ws)
+			$(ws)
                 .bind('open', settings.open)
                 .bind('close', settings.close)
                 .bind('message', settings.message)
                 .bind('message', function(e) {
-                    var m = $.evalJSON(e.originalEvent.data);
-                    var h = settings.events[m.type];
+                	var eString = e.originalEvent;
+                	console.log(eString);
+                   	var m = eString.data;
+                    console.log(m);
+                    //console.log('from bind: ' + eString);
+                    var h = settings.events[e.originalEvent.type];
                     if (h) h.call(this, m);
                 });
             ws._send = ws.send;
+            
             ws.send = function(type, data) {
-                var m = {type: type};
-                m = $.extend(true, m, $.extend(true, {}, settings.options, m));
+            	console.log(data.type);
+                var sent = data.type;
+                data = JSON.stringify(data);
+                console.log('Sending server: ' + data);
+
+               	try { 
+					this._send(data);
+					console.log('Data sent!');
+				} 
+				catch(ex)
+				{ 
+					console.log('Send failed! Error: ' + ex);
+					return false;	
+				}
+			return true;
                 
-                if (data) m['data'] = data;
-                console.log(data);
-                return this._send(m);
             };
             $(window).unload(function(){ ws.close(); ws = null; });
             return ws;

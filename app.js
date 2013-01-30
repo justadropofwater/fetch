@@ -84,57 +84,39 @@ var databaseUrl = "mongodb://localhost:27017/testdb"; // "username:password@exam
 var collections = ["testCollection1", "authRequests", "users","messages"]
 var db = require("mongojs").connect(databaseUrl, collections);
 
-// ultimately these need to be passed around via a router
-// or a store or both but essentially every global var is a var
-// an external process can use whenever they are in memory
 global_counter = 0;
-// is it because how unity parses that we don't use '[]' here?
 all_active_connections = {};
-
-// i'm getting console.log heavy for now until we have some logging happening 
-
 console.log('global_counter: ' + global_counter + ' all_active_connections: ' + all_active_connections);
 
-//now let's have the default on method invoked
+	// method invoked
 	wss.on('connection', function(ws) {
 	       
-//declaring an iteration of global_counter as id
+		//declaring an iteration of global_counter as id
         var id = global_counter++;
 		console.log('id: ' + id);
+		
 		sys.debug("connection: " + ws);
-//adding the new id 
+		//adding the new id 
         all_active_connections[id] = ws;  
         ws.id = id;
-		
 		console.log('ws.id: ' + id);
 		console.log('new socket connection, id = ' + id);
-		
-		
-
-// im missing something, why is this inside the scope of connection?       
+		       
 		ws.on('message', function(message) {
-			var parsedMessage = JSON.parse(message);
 			
-			console.log('received message: %s', parsedMessage);
+			console.log('received message: %s', message);
 
 	        try {
 	        	var jObj = JSON.parse(message);
-	        	console.log('var jObj = JSON.parse(message): %s', jObj);
-
-// this switch/case is fucking beautiful! but this really should be handled by mongoose	
- 		       	switch (jObj.type) {
- 		       	
-// newUser        	
+	        	console.log(jObj);
+ 		       	console.log('switch'); 		   
+ 		       	switch (jObj.type) {    		
+					// newUser        	
 	                case "newUser":
 	                console.log('newUser request from: ' + jObj.userName);
-                	// ws.send("authorized");
-// what are your thoughts of using something like moment.js or node-date-utils.js to generate date?
-// core Date is good but this isn't very robust and its going to be a pain to do Math every
-// time we need a Date object                
-                	var currentDate = Math.floor(new Date().getTime()/1000);
-// generic store function                
+					// generic store function                
 	                db.users.save(
-// user array - this should be broken into schema and live in models.js
+					// user array - this should be broken into schema and live in models.js
 	                	{
 	                		type : "newUser",
 	                		userName : jObj.userName,
@@ -146,12 +128,8 @@ console.log('global_counter: ' + global_counter + ' all_active_connections: ' + 
 	                			console.log("db error, message not saved"); 
 	                			ws.send("db error, message not saved");
 	                		} else  {
-	                        	console.log("message saved to db");
-// is this an integrity check?
-// this should be an explicit function .i.e. "findUser"
-// including this in the scope of creating a new user
-// can make it proning to fishing for current/active accounts
-// during the create process 
+	                        	console.log('message saved to db');
+
 	                        	db.users.find(
 	                        		{
 	                        			userName:jObj.userName,
@@ -166,27 +144,36 @@ console.log('global_counter: ' + global_counter + ' all_active_connections: ' + 
 	                        			if( err || !user) {
 	                        				console.log("user not found");
 	                        				ws.send("0");
+	                        				ws.send('no user found!')
 	                        			} else {
-	                        				console.log(JSON.stringify(user));
-	                        				ws.send("1"+JSON.stringify(user));
-	                                	}
+											// return the data store 
+	                        				var userName = user[0].userName;
+											var uid = user[0]._id;
+											
+											console.log('Returned username: ' + userName); 
+											console.log('Returned uid: ' + uid);
+											
+											var message = 'Welcome!\r\nYour username is ' + userName + ' and your uid is ' + uid + '.';
+											var response = {
+												"type" : "userSaved",
+												"message" : message,
+												"uid" : uid
+											}
+	                        				
+	                        				ws.send(JSON.stringify(response));
+	                                	}	
 	                                }
 								);
 	                        }
 	                	}
 	                );
-                
                 	break;
- // auuthRequest
+                	
+ 					// authRequest
 	                case "authRequest":
-	                console.log('authRequest from: ' + jObj.userName);	                
-	                // ws.send("authorized");
+	                console.log('authRequest from: ' + jObj.userName);
 
-// see
-	                var currentDate = Math.floor(new Date().getTime()/1000);
-
-// save the auth request no matter what         
-// this should eventually move to the logging 'app'       
+					// save the auth request no matter what  
 	                db.authRequests.save(  
 						{
 							type : "authRequest",
@@ -200,7 +187,7 @@ console.log('global_counter: ' + global_counter + ' all_active_connections: ' + 
 								ws.send("db error, message not saved");
 	                		} else  {
 	                        	console.log("authRequest saved to db");
-// integrity check? maybe an md5 sum is in order?                        	
+                  	
 	                        	db.users.find(
 	                        		{
 	                        			userName:jObj.userName,
@@ -216,9 +203,11 @@ console.log('global_counter: ' + global_counter + ' all_active_connections: ' + 
 	                        				console.log("user not found");
 	                        				ws.send("0");
 	                        			} else {
-	                        				console.log(JSON.stringify(authUser));
-	                        				ws.send("1"+JSON.stringify(authUser));
-	                                }
+	                        				var userName = authUser[0].userName;
+											var uid = authUser[0]._id;
+											console.log(userName + ' authenticated! Found uid ' + uid); 
+	                        				ws.send('You have successfully authenticated ' + userName + '/' + uid);
+	                                	}
 	                                });
 	 
 	                        }
@@ -266,7 +255,8 @@ console.log('global_counter: ' + global_counter + ' all_active_connections: ' + 
 			                messageDate : currentDate
 						}, function (err, saved) {
 	                		if ( err || !saved ) {
-	                			console.log("db error, message not saved"); ws.send("db error, message not saved");
+	                			console.log("db error, message not saved"); 
+	                			ws.send("db error, message not saved");
 	                		} else {                        
 // broadcast                        
 								var sendFunction = function(conn, callback) {
