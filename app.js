@@ -108,10 +108,14 @@ console.log('global_counter: ' + global_counter + ' all_active_connections: ' + 
 		
 		console.log('ws.id: ' + id);
 		console.log('new socket connection, id = ' + id);
+		
+		
 
 // im missing something, why is this inside the scope of connection?       
 		ws.on('message', function(message) {
-			console.log('received message: %s', message);
+			var parsedMessage = JSON.parse(message);
+			
+			console.log('received message: %s', parsedMessage);
 
 	        try {
 	        	var jObj = JSON.parse(message);
@@ -287,13 +291,15 @@ console.log('global_counter: ' + global_counter + ' all_active_connections: ' + 
 	        
 // invalid json	        
 	        catch (err) {
-	        	console.log('There has been an error parsing your JSON.')
+
+	        	console.log('There has been an error parsing your JSON.');
 	        	console.log(err);
 	        }
         }
 	).on('close', function() {
 // when the connection closes expunge it from the array
         delete all_active_connections[ws.id];
+        console.log('Closed connection for ' + ws.id);
 		}
 	);
 });

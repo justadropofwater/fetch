@@ -3,12 +3,15 @@
 	<head>
 		<title>fetch Server Test - Simple Client</title>
 	  	<meta charset="UTF-8" />
+	  	<!-- what's a google plex? -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		<!-- depending on dependencies -->
 	  	<script language="javascript" type="text/javascript" src="jquery.websocket.js"></script>
 	  	<script language="javascript" type="text/javascript" src="simple-client.js"></script>
 	</head>
 	<body>
 		<pre>
-			<span class="bold">URL: </span> <input id="url" /> <input id="open" type="button" value="Connect" /> <input id="close" type="button" value="Disconnect" />
+			<span class="bold">URL:</span><input id="url" /> <input id="connect" type="button" value="Connect" /> <input id="disconnect" type="button" value="Disconnect" />
 			<br />
 			<span class="bold">Status:</span> <span id="status"></span>
 		</pre>
@@ -23,7 +26,7 @@
 			<input id="send" type="button" value="Send" />
 		  	<br />
 		  	<span class="bold">Response</span>
-		  	<span id="message"></span>
+		  	<ul id="log"></li>
 		</pre>  	
 	</body>
 </html>

@@ -36,8 +36,10 @@
             ws.send = function(type, data) {
                 var m = {type: type};
                 m = $.extend(true, m, $.extend(true, {}, settings.options, m));
+                
                 if (data) m['data'] = data;
-                return this._send($.toJSON(m));
+                console.log(data);
+                return this._send(m);
             };
             $(window).unload(function(){ ws.close(); ws = null; });
             return ws;
