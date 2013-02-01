@@ -2,65 +2,80 @@
  * simple client
  */
 
-// throw more exceptions and check coding conventions 
-// blooper patrol
-"use strict";
+// so jslint doesn't flip
+/*global window */
+/*global document */
+/*global console */
+/*global $ */
+
 
 // string generators
 function generateUserName()
 	{
-		var text = "";
-		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		for( var i=0; i < 16; i++ )
+		"use strict";
+		var text = ''
+		, i
+		, possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		for(i=0; i < 16; i++ ) {
     		text += possible.charAt(Math.floor(Math.random() * possible.length));
+    	}
 		return text;
-};
+}
 
 function generateDeviceID()
 	{
-		var text = "";
-		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		for( var i=0; i < 16; i++ )
+		"use strict";
+		var text = ''
+		, i
+		, possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		for(i=0; i < 16; i++ ) {
     		text += possible.charAt(Math.floor(Math.random() * possible.length));
+    	}
 		return text;
-};
+}
 
 function generatePassword()
 	{
-		var text = "";
-		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		for( var i=0; i < 8; i++ )
+		"use strict";
+		var text = ''
+		, i
+		, possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		for(i=0; i < 8; i++ ) {
     		text += possible.charAt(Math.floor(Math.random() * possible.length));
+    	}
 		return text;
-};
+}
 
 function generateMessage()
 	{
-		var text = "";
-		var possible = "!@#$%^&*(){}-+=\/[]<>/.,'\";:ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		for( var i=0; i < 64; i++ )
+		"use strict";
+		var text = ''
+		, i
+		, possible = '!@#$%^&*(){}-+=ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		for(i=0; i < 64; i++ ) {
     		text += possible.charAt(Math.floor(Math.random() * possible.length));
+    	}
 		return text;
-};
+}
 
 // Initialize everything when the window finishes loading
 window.addEventListener("load", function(event) {
-	var status = document.getElementById("status");
-	var url = document.getElementById("url");
-	var connect = document.getElementById('connect');
-	var disconnect = document.getElementById('disconnect');
-	var send = document.getElementById("send");
-	var text = document.getElementById("text");
-	var message = document.getElementById("message");
-	var test;
-	var userName;
-	var userNameActive = document.getElementById("username");
-	var uid;
-	var uidActive = document.getElementById('uid');
-	var passWord;
-	var passWordActive = document.getElementById("password");
-	var deviceID;
-	var deviceIDActive = document.getElementById("deviceID");
+	"use strict";
+	var status = document.getElementById("status")
+	, url = document.getElementById("url")
+	, connect = document.getElementById('connect')
+	, disconnect = document.getElementById('disconnect')
+	, send = document.getElementById("send")
+	, text = document.getElementById("text")
+	, message = document.getElementById("message")
+	, userName
+	, userNameActive = document.getElementById("username")
+	, uid
+	, uidActive = document.getElementById('uid')
+	, passWord
+	, passWordActive = document.getElementById("password")
+	, deviceID
+	, deviceIDActive = document.getElementById("deviceID");
 	
 // intial state	
 	status.textContent = "Not Connected";
@@ -90,12 +105,11 @@ window.addEventListener("load", function(event) {
 	        	$('#log').append('<li>Disconnected from ' + url.value + '</li>');
 	        },
 		    events: {
-				message: function(e, err) {
+				message: function(e) {
 				    try {
 			        	var data = JSON.parse(e);
 	        			console.log(data);
-	        			console.log(data.type);
- 		       			console.log('switch');
+ 		       			console.log('switch to ' + data.type);
  		       			switch (data.type) {    		
 							// newUser        	
 	                		case "userSaved":
@@ -103,11 +117,35 @@ window.addEventListener("load", function(event) {
 								console.log(uid);
 								$('#log').append('<li>Response: ' + data.message + '</li>');
 							break;
+							
+	                		case "authRequest":
+								$('#log').append('<li>Response: ' + data.message + '</li>');
+							break;
+							
+							case "getContacts":
+								// potential hazard
+								var contacts = eval('(' + data.message + ')')
+								, i;
+								
+								for (i = 0; i < contacts.length; i++) {
+									console.log(contacts[i]);
+									var username = contacts[i].userName
+									, userID = contacts[i]._id;
+								   	
+								   	$('#contactList').append('<li>User: ' + username + '</li>');   								
+								}		    	 						
+								
+	   	 					break;
+
+	                		case "newMessage":
+								$('#messages').append('<li>New Message: ' + data.message + '</li>');
+							break;
+																											
 						}
 					}
-					catch (err) {
+					catch (ex) {
 	        			console.log('There has been an error parsing your JSON.');
-	        			console.log(err);
+	        			console.log(ex);
 	        		}	
 				}
 			}
@@ -116,7 +154,7 @@ window.addEventListener("load", function(event) {
 	
 		$('#disconnect').click(function() {
 			console.log('Attempting to disconnect from ' + url.value);
-			ws.close;
+		
 		});
 		
 		$('#newUser').click(function() {
@@ -125,12 +163,10 @@ window.addEventListener("load", function(event) {
 			userName = generateUserName();
 			passWord = generatePassword();
 			deviceID = generateDeviceID();
-			var authRequestDate = new Date();
-			var	authRequestEpoch = authRequestDate.getTime();
-			//this is lame
-			authRequestEpoch = "" + authRequestEpoch + "";
-			 						
-        	var payload = {
+
+			var authRequestDate = new Date()
+			,	authRequestEpoch = authRequestDate.getTime()						
+        	, payload = {
         		"type" : "newUser",
 				"userName" : userName,
 				"password" : passWord,
@@ -141,6 +177,7 @@ window.addEventListener("load", function(event) {
         	ws.send('newUser', payload);
         	payload = JSON.stringify(payload);
 			$('#log').append('<li>Sent newUser payload: ' + payload + '</li>');
+			
 			userNameActive.textContent = userName;
 			passWordActive.textContent = passWord;
 			deviceIDActive.textContent = deviceID;
@@ -150,11 +187,9 @@ window.addEventListener("load", function(event) {
 		$('#authRequest').click(function() {
         	$('#log').append('<li>Attempting to request authentication!</li>');
 
-			var authRequestDate = new Date();
-			var	authRequestEpoch = authRequestDate.getTime();
-			//still lame
-			authRequestEpoch = "" + authRequestEpoch + "";  						
-        	var payload = {
+			var authRequestDate = new Date()
+			,	authRequestEpoch = authRequestDate.getTime()
+        	, payload = {
 				type : "authRequest",
 				userName : userName,
 				password : passWord,
@@ -182,24 +217,38 @@ window.addEventListener("load", function(event) {
         	$('#log').append('<li>Attempting to send a message!</li>');
 
 			message = generateMessage();
-			var messageDate = new Date();
-			var	messageEpoch = messageDate.getTime();
-			//yup, lame
-			messageEpoch = "" + messageEpoch + "";  						
-        	var payload = {
+			var messageDate = new Date()
+			,	messageEpoch = messageDate.getTime()
+        	, payload = {
 				type : "newMessage",
 				userName : userName,
 				userID : uid,
 				message : message,
 				messageDate : messageEpoch
 			};
+			
 			console.log(payload);
         	ws.send('newMessage', payload);
         	payload = JSON.stringify(payload);
+			
 			$('#log').append('<li>Sent message payload: ' + payload + '</li>');
-						
+		});
+
+		$('#getContacts').click(function() {
+        	$('#log').append('<li>Attempting to retrieve contacts!</li>');
+
+			var payload = {
+				type : "getContacts",
+				userName : userName,
+				deviceID : deviceID
+			};
+			
+			console.log(payload);
+			
+        	ws.send('getcontacts', payload);
+        	payload = JSON.stringify(payload);
+			
+			$('#log').append('<li>Sent message payload: ' + payload + '</li>');
 		});		
-
 	});
-
 });
