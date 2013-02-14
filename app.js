@@ -35,7 +35,7 @@ console.log('locked and loaded');
 
 	// method invoked
 	wss.on('connection', function(ws) {
-	    "use strict";
+
 		//declaring an iteration of global_counter as id
         var id = global_counter++;
 		console.log('id: ' + id);
@@ -129,27 +129,27 @@ console.log('locked and loaded');
 								ws.send("db error, message not saved");
 	                		} else  {
 	                        	console.log("authRequest saved to db");
-                  	
+
 	                        	db.users.find(
 	                        		{
 	                        			userName:jObj.userName,
 	                        			password:jObj.password,
 	                        			deviceID:jObj.deviceID
-	                        		},{
-	                        			type:0, 
-	                        			authRequestDate:0, 
-	                        			deviceID:0,  
-	                        			password:0
 	                        		}, function(err, authUser) {
 	                        			if( err || !authUser) {
-	                        				console.log("user not found");
+	                        				console.log('user not found');
 	                        				ws.send("0");
 	                        			} else {
-	                        				var userName = authUser[0].userName
+		                        			console.log('received a payload...stand by...');
+		                        			console.log(jObj.userName);
+		                        			// if there isn't a matching UUID this shit breaksssss
+	                        				var userName = jObj.userName
 											, uid = authUser[0]._id
 											, message = 'Server says: You have successfully authenticated ' + userName + ' with the uid of ' + uid + '.'
 											, response = {
 												"type" : "authRequest",
+												"userName" : userName,
+												"uid" : uid,
 												"message" : message
 												//session check here
 											};

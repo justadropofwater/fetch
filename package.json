@@ -9,12 +9,10 @@
   "dependencies": {
     "express": "*",
     "async": "*",
-    "startStopDaemon": "*",
     "optimist": "*",
     "moment": "*",
     "ws": "*",
     "mongoose": "*",
-    "express-mongodb": "*",
-    "node-crypto-aes": "*"
+    "express-mongodb": "*"
     }
 }

@@ -2,19 +2,18 @@
 <html lang="en">
 	<head>
 		<title>fetch Server Test - Simple Client</title>
-	  	<meta name="viewport" content="width=device-width, initial-scale=1"> 
-	  	
-	  	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.0-beta.1/jquery.mobile-1.3.0-beta.1.min.css" />
-	  	
-	  	<!-- what's a google plex? -->
+		<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.0-beta.1/jquery.mobile-1.3.0-beta.1.min.css" />
+		<link rel="stylesheet" href="css/index.css" />
+<!-- what's a google plex? -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+		
 		<script src="http://code.jquery.com/mobile/1.3.0-beta.1/jquery.mobile-1.3.0-beta.1.min.js"></script>
-    	<script src="http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js"></script>
-    	
-    	
+		<script src="http://jquery-json.googlecode.com/files/jquery.json-2.2.min.js"></script>
 		<!-- depending on dependencies -->
-	  	<script language="javascript" type="text/javascript" src="jquery.websocket.js"></script>
-	  	<script language="javascript" type="text/javascript" src="simple-client.js"></script>
+		<script language="javascript" type="text/javascript" src="lib/jquery.websocket.js"></script>
+		<script language="javascript" type="text/javascript" src="lib/simple-client.js"></script>
 	</head>
 	<body>
 		<div data-role="page">
@@ -45,7 +44,7 @@
 				    <textarea type="text" name="payload" id="payload">{"type": "" , "message": ""}</textarea>
 				</div>
 		
-				<div class="ui-grid-b ui-responsive">
+				<div class="console ui-grid-b ui-responsive">
 					<div class="ui-block-a">
 						<ul data-role="listview" id="log"></ul>
 				  	</div>

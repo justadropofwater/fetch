@@ -1,0 +1,12 @@
+div.console {
+	font-size: 9px;
+	width: 100%;
+	float: left;
+	word-wrap: break-word;
+}
+
+div.console div {
+	padding: 2em;
+	margin: 0 !important;
+	
+}
