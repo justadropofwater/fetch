@@ -112,7 +112,7 @@ window.addEventListener("load", function(event) {
  		       			console.log('switch to ' + data.type);
  		       			switch (data.type) {
 
-					case 'welcome' :
+					  case 'welcome' :
 						console.log(data.message);
 					break;
 
